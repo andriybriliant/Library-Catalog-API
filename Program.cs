@@ -71,6 +71,16 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+try
+{
+    await DatabaseSeeder.SeedAdminUserAsync(app.Services);
+}
+catch (Exception ex)
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occurred while seeding the database.");
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

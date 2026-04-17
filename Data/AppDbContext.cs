@@ -16,5 +16,23 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Username)
             .IsUnique();
+
+        modelBuilder.Entity<Book>()
+            .HasOne(b => b.Author)
+            .WithMany(a => a.Books)
+            .HasForeignKey(b => b.AuthorId)
+            .OnDelete(DeleteBehavior.Restrict); 
+
+        modelBuilder.Entity<Checkout>()
+            .HasOne(c => c.User)
+            .WithMany(u => u.Checkouts)
+            .HasForeignKey(c => c.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Checkout>()
+            .HasOne(c => c.Book)
+            .WithMany(b => b.Checkouts)
+            .HasForeignKey(c => c.BookId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -8,4 +8,6 @@ public class User
     public string Role { get; set; } = "Member";
     public string? RefreshToken { get; set; }
     public DateTime? RefreshTokenExpiryTime { get; set; }
+
+    public ICollection<Checkout> Checkouts { get; set; } = new List<Checkout>();
 }

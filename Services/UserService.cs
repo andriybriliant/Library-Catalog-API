@@ -1,0 +1,25 @@
+using LibraryCatalogAPI.Data;
+using LibraryCatalogAPI.Services.Interfaces;
+
+namespace LibraryCatalogAPI.Services;
+
+public class UserService : IUserService
+{
+    private readonly AppDbContext _context;
+
+    public UserService(IConfiguration configuration, AppDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task DeleteUserAsync(string username)
+    {
+        var user = _context.Users.FirstOrDefault(u => u.Username == username);
+        if (user == null)
+        {
+            throw new KeyNotFoundException($"User with username {username} not found");
+        }
+        _context.Remove(user);
+        await _context.SaveChangesAsync();
+    }
+}

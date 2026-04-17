@@ -49,12 +49,4 @@ public class AuthController : ControllerBase
         if (!success) return BadRequest("Username already exists.");
         return Ok("Librarian registered successfully.");
     }
-
-    [Authorize(Roles = "Admin")]
-    [HttpDelete("{username}")]
-    public async Task<IActionResult> DeleteUser(string username)
-    {
-        await _authService.DeleteUserAsync(username);
-        return NoContent();
-    }
 }

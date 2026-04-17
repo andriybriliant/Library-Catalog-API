@@ -8,7 +8,6 @@ using LibraryCatalogAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
-using Microsoft.AspNetCore.Identity;
 
 namespace LibraryCatalogAPI.Services;
 
@@ -123,16 +122,5 @@ public class AuthService : IAuthservice
             throw new SecurityTokenException("Invalid token");
 
         return principal;
-    }
-
-    public async Task DeleteUserAsync(string username)
-    {
-        var user = _context.Users.FirstOrDefault(u => u.Username == username);
-        if (user == null)
-        {
-            throw new KeyNotFoundException($"User with username {username} not found");
-        }
-        _context.Remove(user);
-        await _context.SaveChangesAsync();
     }
 }

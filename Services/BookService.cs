@@ -36,4 +36,16 @@ public class BookService : IBookService
         await _context.SaveChangesAsync();
         return newBook;
     }
+
+    public async Task DeleteAsync(Guid id)
+    {
+        var entity = _context.Books.FindAsync(id);
+        if(entity.Result == null)
+        {
+            throw new KeyNotFoundException($"Book with id {id} not found");
+        }
+
+        _context.Remove(entity);
+        await _context.SaveChangesAsync();
+    }
 }

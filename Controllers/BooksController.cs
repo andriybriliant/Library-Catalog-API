@@ -3,7 +3,6 @@ using LibraryCatalogAPI.Models.DTOs;
 using LibraryCatalogAPI.Models.DTOs.Create;
 using LibraryCatalogAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryCatalogAPI.Controllers;
@@ -32,5 +31,12 @@ public class BooksController : ControllerBase
     {
         var createdBook = await _bookService.CreateBookAsync(dto);
         return Ok(createdBook);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteBook(Guid id)
+    {
+        await _bookService.DeleteAsync(id);
+        return NoContent();
     }
 }

@@ -1,6 +1,7 @@
 using LibraryCatalogAPI.Models.DTOs;
 using LibraryCatalogAPI.Services;
 using LibraryCatalogAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryCatalogAPI.Controllers;
@@ -38,5 +39,22 @@ public class AuthController : ControllerBase
         var newTokenModel = await _authService.RefreshTokenAsync(tokenModel);
         if (newTokenModel == null) return Unauthorized("Invalid client request.");
         return Ok(newTokenModel);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost("register-librarian")]
+    public async Task<IActionResult> RegisterLibrarian([FromBody] RegisterDto registerDto)
+    {
+        var success = await _authService.RegisterAsync(registerDto, true);
+        if (!success) return BadRequest("Username already exists.");
+        return Ok("Librarian registered successfully.");
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("{username}")]
+    public async Task<IActionResult> DeleteUser(string username)
+    {
+        await _authService.DeleteUserAsync(username);
+        return NoContent();
     }
 }

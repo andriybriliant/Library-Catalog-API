@@ -24,7 +24,7 @@ public class AuthorsController : ControllerBase
         return Ok(authors);
     }
 
-    [Authorize(Roles = "Librarian")]
+    [Authorize(Roles = "Admin, Librarian")]
     [HttpPost]
     public async Task<IActionResult> Create(CreateAuthorDto authorDto)
     {
@@ -32,7 +32,7 @@ public class AuthorsController : ControllerBase
         return Ok(createdAuthor);
     }
 
-    [Authorize(Roles = "Librarian")]
+    [Authorize(Roles = "Admin, Librarian")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {

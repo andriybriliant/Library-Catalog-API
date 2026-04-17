@@ -26,7 +26,7 @@ public class BooksController : ControllerBase
         return Ok(books);
     }
 
-    [Authorize(Roles = "Librarian")]
+    [Authorize(Roles = "Admin, Librarian")]
     [HttpPost]
     public async Task<ActionResult<IEnumerable<BookDto>>> CreateBook(CreateBookDto dto)
     {
@@ -34,7 +34,7 @@ public class BooksController : ControllerBase
         return Ok(createdBook);
     }
 
-    [Authorize(Roles = "Librarian")]
+    [Authorize(Roles = "Admin, Librarian")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBook(Guid id)
     {

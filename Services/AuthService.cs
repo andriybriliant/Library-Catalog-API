@@ -8,6 +8,7 @@ using LibraryCatalogAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Identity;
 
 namespace LibraryCatalogAPI.Services;
 
@@ -22,17 +23,17 @@ public class AuthService : IAuthservice
         _context = context;
     }
 
-    public async Task<bool> RegisterAsync(RegisterDto registerDto)
+    public async Task<bool> RegisterAsync(RegisterDto registerDto, bool isAddLibrarian)
     {
         var userExists = await _context.Users.AnyAsync(u => u.Username == registerDto.Username);
         if (userExists) return false;
 
-        var newUser = new Models.User
+        var newUser = new User
         {
             Id = Guid.NewGuid(),
             Username = registerDto.Username,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password),
-            Role = registerDto.Role
+            Role = isAddLibrarian? "Librarian" : "Member"
         };
 
         _context.Users.Add(newUser);
@@ -122,5 +123,16 @@ public class AuthService : IAuthservice
             throw new SecurityTokenException("Invalid token");
 
         return principal;
+    }
+
+    public async Task DeleteUserAsync(string username)
+    {
+        var user = _context.Users.FirstOrDefault(u => u.Username == username);
+        if (user == null)
+        {
+            throw new KeyNotFoundException($"User with username {username} not found");
+        }
+        _context.Remove(user);
+        await _context.SaveChangesAsync();
     }
 }

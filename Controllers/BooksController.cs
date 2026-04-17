@@ -1,5 +1,6 @@
 using LibraryCatalogAPI.Models;
 using LibraryCatalogAPI.Models.DTOs;
+using LibraryCatalogAPI.Models.DTOs.Create;
 using LibraryCatalogAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -25,11 +26,11 @@ public class BooksController : ControllerBase
         var books = await _bookService.GetAllBooksAsync();
         return Ok(books);
     }
-    
+
     [HttpPost]
-    public async Task<ActionResult<IEnumerable<BookDto>>> CreateBook(BookDto bookDto)
+    public async Task<ActionResult<IEnumerable<BookDto>>> CreateBook(CreateBookDto dto)
     {
-        var createdBook = await _bookService.CreateBookAsync(bookDto);
+        var createdBook = await _bookService.CreateBookAsync(dto);
         return Ok(createdBook);
     }
 }

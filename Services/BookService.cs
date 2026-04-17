@@ -1,6 +1,7 @@
 using LibraryCatalogAPI.Data;
 using LibraryCatalogAPI.Models;
 using LibraryCatalogAPI.Models.DTOs;
+using LibraryCatalogAPI.Models.DTOs.Create;
 using LibraryCatalogAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +21,7 @@ public class BookService : IBookService
         return await _context.Books.ToListAsync();
     }
 
-    public async Task<Book> CreateBookAsync(BookDto bookDto)
+    public async Task<Book> CreateBookAsync(CreateBookDto bookDto)
     {
         var newBook = new Book
         {

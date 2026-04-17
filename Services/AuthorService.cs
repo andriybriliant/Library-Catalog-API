@@ -42,4 +42,16 @@ public class AuthorService : IAuthorService
 
         return new AuthorDto { Id = author.Id, Name = author.Name, Biography = author.Biography };
     }
+
+    public async Task DeleteAsync(Guid id)
+    {
+        var entity = _context.Authors.FindAsync(id);
+        if(entity.Result == null)
+        {
+            throw new KeyNotFoundException($"Author with id {id} not found");
+        }
+
+        _context.Remove(entity);
+        await _context.SaveChangesAsync();
+    }
 }

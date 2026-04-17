@@ -31,4 +31,12 @@ public class AuthorsController : ControllerBase
         var createdAuthor = await _authorService.CreateAuthorAsync(authorDto);
         return Ok(createdAuthor);
     }
+
+    [Authorize(Roles = "Librarian")]
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await _authorService.DeleteAsync(id);
+        return NoContent();
+    }
 }

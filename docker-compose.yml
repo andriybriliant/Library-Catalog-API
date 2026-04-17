@@ -4,7 +4,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2025-latest
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "admin"
+      MSSQL_SA_PASSWORD: "Admin123!"
     ports:
       - "1433:1433"
     volumes:

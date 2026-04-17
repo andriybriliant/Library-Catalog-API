@@ -31,7 +31,8 @@ public class AuthService : IAuthservice
         {
             Id = Guid.NewGuid(),
             Username = registerDto.Username,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password)
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password),
+            Role = registerDto.Role
         };
 
         _context.Users.Add(newUser);
@@ -63,7 +64,7 @@ public class AuthService : IAuthservice
 
     private async Task<TokenResponseDto> CreateTokenPairAsync(User user)
     {
-        var accessToken = GenerateJwtToken(user.Username);
+        var accessToken = GenerateJwtToken(user);
         var refreshToken = GenerateRefreshToken();
 
         user.RefreshToken = refreshToken;
@@ -73,15 +74,16 @@ public class AuthService : IAuthservice
         return new TokenResponseDto { AccessToken = accessToken, RefreshToken = refreshToken };
     }
 
-    private string GenerateJwtToken(string username)
+    private string GenerateJwtToken(User user)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, username),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(ClaimTypes.Role, user.Role)
         };
 
         var token = new JwtSecurityToken(

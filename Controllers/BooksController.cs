@@ -35,10 +35,19 @@ public class BooksController : ControllerBase
 
     [Authorize(Roles = "Admin, Librarian")]
     [HttpPost]
-    public async Task<ActionResult<IEnumerable<BookDto>>> CreateBook(CreateBookDto dto)
+    public async Task<ActionResult<BookDto>> CreateBook(CreateBookDto dto)
     {
         var createdBook = await _bookService.CreateBookAsync(dto);
         return Ok(createdBook);
+    }
+
+    [Authorize(Roles = "Admin, Librarian")]
+    [HttpPut("{id}")]
+    public async Task<ActionResult<BookDto>> UpdateBook(Guid id, CreateBookDto dto)
+    {
+        var updatedBook = await _bookService.UpdateBookAsync(id, dto);
+        if (updatedBook == null) return NotFound();
+        return Ok(updatedBook);
     }
 
     [Authorize(Roles = "Admin, Librarian")]

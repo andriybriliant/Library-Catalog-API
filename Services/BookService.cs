@@ -4,6 +4,8 @@ using LibraryCatalogAPI.Models;
 using LibraryCatalogAPI.Models.DTOs;
 using LibraryCatalogAPI.Models.DTOs.Create;
 using LibraryCatalogAPI.Services.Interfaces;
+using LibraryCatalogAPI.Validators;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryCatalogAPI.Services;
@@ -56,6 +58,22 @@ public class BookService : IBookService
         _context.Books.Add(newBook);
         await _context.SaveChangesAsync();
         return newBook;
+    }
+
+    public async Task<Book?> UpdateBookAsync(Guid id, CreateBookDto dto)
+    {
+        var book = await _context.Books.FindAsync(id);
+        if(book == null)
+        {
+            return null;
+        }
+
+        book.Title = dto.Title;
+        book.ISBN = dto.ISBN;
+        book.AuthorId = dto.AuthorId;
+
+        await _context.SaveChangesAsync();
+        return book;
     }
 
     public async Task DeleteAsync(Guid id)

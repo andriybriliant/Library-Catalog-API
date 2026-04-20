@@ -3,9 +3,9 @@ using LibraryCatalogAPI.Models.DTOs.Create;
 
 namespace LibraryCatalogAPI.Validators;
 
-public class BookDtoValidator : AbstractValidator<CreateBookDto>
+public class CreateBookDtoValidator : AbstractValidator<CreateBookDto>
 {
-    public BookDtoValidator()
+    public CreateBookDtoValidator()
     {
         RuleFor(x => x.Title)
             .NotEmpty().WithMessage("The book title is required.")

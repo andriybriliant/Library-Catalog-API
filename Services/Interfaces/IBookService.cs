@@ -7,7 +7,8 @@ namespace LibraryCatalogAPI.Services.Interfaces;
 public interface IBookService
 {
     Task<IEnumerable<Book>> GetAllBooksAsync();
-    Task<BookDto> GetBookByIdAsync(Guid id); 
+    Task<BookDto> GetBookByIdAsync(Guid id);
     Task<Book> CreateBookAsync(CreateBookDto dto);
+    Task<Book?> UpdateBookAsync(Guid id, CreateBookDto dto);
     Task DeleteAsync(Guid id);
 }

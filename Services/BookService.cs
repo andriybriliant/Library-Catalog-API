@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using LibraryCatalogAPI.Data;
 using LibraryCatalogAPI.Models;
 using LibraryCatalogAPI.Models.DTOs;
@@ -21,6 +22,24 @@ public class BookService : IBookService
         return await _context.Books
             .Include(b => b.Author)
             .ToListAsync();
+    }
+
+    public async Task<BookDto> GetBookByIdAsync(Guid id)
+    {
+        var book = _context.Books.FindAsync(id);
+        if(book.Result == null)
+        {
+            throw new KeyNotFoundException($"Book with id {id} not found");
+        }
+
+        return new BookDto
+        {
+            Id = book.Result.Id,
+            Title = book.Result.Title,
+            ISBN = book.Result.ISBN,
+            AuthorId = book.Result.AuthorId,
+            IsAvailable = book.Result.IsAvailable
+        };
     }
 
     public async Task<Book> CreateBookAsync(CreateBookDto bookDto)

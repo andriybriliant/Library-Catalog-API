@@ -26,6 +26,13 @@ public class BooksController : ControllerBase
         return Ok(books);
     }
 
+    [HttpGet("{id}")]
+    public async Task<ActionResult<BookDto>> GetBookById(Guid id)
+    {
+        var book = await _bookService.GetBookByIdAsync(id);
+        return Ok(book);
+    }
+
     [Authorize(Roles = "Admin, Librarian")]
     [HttpPost]
     public async Task<ActionResult<IEnumerable<BookDto>>> CreateBook(CreateBookDto dto)

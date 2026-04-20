@@ -1,6 +1,7 @@
 using LibraryCatalogAPI.Data;
 using LibraryCatalogAPI.Models.DTOs;
 using LibraryCatalogAPI.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryCatalogAPI.Services;
 
@@ -15,7 +16,7 @@ public class UserService : IUserService
 
     public async Task DeleteUserAsync(string username)
     {
-        var user = _context.Users.FirstOrDefault(u => u.Username == username);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
         if (user == null)
         {
             throw new KeyNotFoundException($"User with username {username} not found");
@@ -26,7 +27,7 @@ public class UserService : IUserService
 
     public async Task<UserDto> GetCurrentUserAsync(string username)
     {
-        var user = _context.Users.FirstOrDefault(u => u.Username == username);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
         if (user == null)
         {
             throw new KeyNotFoundException($"User with username {username} not found");

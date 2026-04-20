@@ -2,6 +2,7 @@ using LibraryCatalogAPI.Models;
 using LibraryCatalogAPI.Models.DTOs;
 using LibraryCatalogAPI.Models.DTOs.Create;
 using LibraryCatalogAPI.Services.Interfaces;
+using LibraryCatalogAPI.Validators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,10 +14,12 @@ namespace LibraryCatalogAPI.Controllers;
 public class BooksController : ControllerBase
 {
     private readonly IBookService _bookService;
+    private readonly CreateBookDtoValidator _validator;
 
-    public BooksController(IBookService bookService)
+    public BooksController(IBookService bookService, CreateBookDtoValidator validator)
     {
         _bookService = bookService;
+        _validator = validator;
     }
 
     [HttpGet]
@@ -37,6 +40,11 @@ public class BooksController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<BookDto>> CreateBook(CreateBookDto dto)
     {
+        var validation = _validator.Validate(dto);
+        if (!validation.IsValid)
+        {
+            return BadRequest(validation.Errors);
+        }
         var createdBook = await _bookService.CreateBookAsync(dto);
         return Ok(createdBook);
     }
@@ -45,6 +53,11 @@ public class BooksController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult<BookDto>> UpdateBook(Guid id, CreateBookDto dto)
     {
+        var validation = _validator.Validate(dto);
+        if (!validation.IsValid)
+        {
+            return BadRequest(validation.Errors);
+        }
         var updatedBook = await _bookService.UpdateBookAsync(id, dto);
         if (updatedBook == null) return NotFound();
         return Ok(updatedBook);

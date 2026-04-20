@@ -30,6 +30,7 @@ public class AuthService : IAuthservice
         var newUser = new User
         {
             Id = Guid.NewGuid(),
+            NameSurname = registerDto.NameSurname,
             Username = registerDto.Username,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password),
             Role = isAddLibrarian? "Librarian" : "Member"
